@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .container {
+      z-index: 1;
+      width: 90%;
+      max-width: 380px;
+      padding: 40px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      box-shadow: 0 0 50px rgba(255, 0, 255, 0.5);
+    }
+
+    .welcome-text {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      font-size: 58px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+    }
+
+    .welcome-text span {
+      opacity: 0;
+      transform: translateY(40px);
+      animation: jumpLetter 0.6s ease forwards;
+      text-shadow: 0 0 15px #ff00ff;
+    }
+
+    @keyframes jumpLetter {
+      0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.9);
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(-15px) scale(1.1);
+        text-shadow: 0 0 25px #ff00ff, 0 0 45px #bd00ff;
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        text-shadow: 0 0 20px #ff00ff, 0 0 40px #7a00ff;
+      }
+    }
+
+    .welcome-text span:nth-child(1) { animation-delay: 0.2s; }
+    .welcome-text span:nth-child(2) { animation-delay: 0.4s; }
+    .welcome-text span:nth-child(3) { animation-delay: 0.6s; }
+    .welcome-text span:nth-child(4) { animation-delay: 0.8s; }
+    .welcome-text span:nth-child(5) { animation-delay: 1.0s; }
+    .welcome-text span:nth-child(6) { animation-delay: 1.2s; }
+
+    input, button {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: 14px;
+      opacity: 0;
+      transform: translateY(50px);
+      animation: jumpIn 0.8s ease forwards;
+    }
+
+    button {
+      border-radius: 30px;
+      background: linear-gradient(135deg, #ff00ff, #7a00ff);
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.4s ease;
+    }
+
+    button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 25px #ff00ff;
+    }
+
+    #name { animation-delay: 1.8s; }
+    #email { animation-delay: 2.1s; }
+    #password { animation-delay: 2.4s; }
+    button { animation-delay: 2.7s; }
+    p { opacity: 0; animation: fadeIn 1s ease forwards 3s; }
+
+    @keyframes jumpIn {
+      0% { opacity: 0; transform: translateY(50px) scale(0.9); }
+      60% { opacity: 1; transform: translateY(-10px) scale(1.05); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    p, a {
+      color: #fff;
+    }
+
+    a:hover {
+      text-shadow: 0 0 10px #ff00ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="welcome-text">
+      <span>S</span><span>I</span><span>G</span><span>N</span><span>U</span><span>P</span>
+    </div>
+
+    <form id="signupForm">
+      <input type="text" placeholder="Enter Username" id="name" required />
+      <input type="email" placeholder="Enter Email" id="email" required />
+      <input type="password" placeholder="Enter Password" id="password" required />
+      <button type="submit">Create Account</button>
+    </form>
+
+    <p>Already have an account? <a href="/login.html">Login</a></p>
+  </div>
+
+  <script>
+    const backendURL = "http://a94c518996fba4272ab2a2702d3bcf1a-1172421349.eu-west-1.elb.amazonaws.com"; // ✅ your backend URL
+
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!username || !email || !password) {
+        alert("Please fill all fields!");
+        return;
+      }
+
+      try {
+        const response = await fetch(`${backendURL}/api/save`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert("Signup successful! Redirecting to login...");
+          window.location.href = "/login.html";
+        } else {
+          alert(data.error || "Signup failed. Try again.");
+        }
+      } catch (err) {
+        console.error("Signup error:", err);
+        alert("Server error. Please try again later.");
+      }
+    });
+  </script>
+</body>
+</html>
