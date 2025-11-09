@@ -1,0 +1,11 @@
+sudo dnf install -y mariadb105      #===>  install mysql
+
+-----------------------------------------------------------------------
+
+yum install pip -y   #===> install python required dependencies
+
+pip install flask flask-cors pymysql
+
+pip install bcrypt
+
+pip install flask flask-cors pymysql bcrypt
