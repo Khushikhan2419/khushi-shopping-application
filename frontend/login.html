@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .container {
+      z-index: 1;
+      width: 90%;
+      max-width: 380px;
+      padding: 40px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      box-shadow: 0 0 50px rgba(255, 0, 255, 0.5);
+    }
+
+    .welcome-text {
+      font-size: 58px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 7px;
+      text-transform: uppercase;
+      animation: bounce 1.5s infinite ease-in-out, neon 2s infinite alternate;
+      margin-bottom: 30px;
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      40% { transform: translateY(-18px); }
+      60% { transform: translateY(8px); }
+      100% { transform: translateY(0); }
+    }
+
+    @keyframes neon {
+      0% {
+        text-shadow: 0 0 10px #ff00ff, 0 0 30px #ff00ff, 0 0 60px #7a00ff;
+      }
+      100% {
+        text-shadow: 0 0 20px #ff00ff, 0 0 50px #bd00ff, 0 0 100px #ff00c3;
+      }
+    }
+
+    input {
+      width: 90%;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 14px;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #ff00ff, #7a00ff);
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.4s ease;
+    }
+
+    button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 25px #ff00ff;
+    }
+
+    p, a {
+      color: #fff;
+    }
+
+    a:hover {
+      text-shadow: 0 0 10px #ff00ff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="welcome-text">WELCOME</div>
+
+  <form id="loginForm">
+    <input type="email" placeholder="Enter Email" id="email" required>
+    <input type="password" placeholder="Enter Password" id="password" required>
+    <button type="submit">Login</button>
+  </form>
+
+  <p>Don't have an account? <a href="/signup.html">Sign up</a></p>
+</div>
+
+<script>
+const backendURL = "http://a94c518996fba4272ab2a2702d3bcf1a-1172421349.eu-west-1.elb.amazonaws.com"; // ✅ Your backend load balancer URL
+
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!email || !password) {
+    alert("Please enter both email and password!");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${backendURL}/api/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("Login successful!");
+      localStorage.setItem("user", JSON.stringify(data.user)); // optional store
+      window.location.href = "/app/chat.html"; // redirect after login
+    } else {
+      alert(data.error || "Invalid email or password.");
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    alert("Error connecting to server.");
+  }
+});
+</script>
+
+</body>
+</html>
