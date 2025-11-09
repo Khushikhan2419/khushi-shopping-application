@@ -8,10 +8,10 @@ CORS(app)
 
 # ---------------- DATABASE CONFIG ----------------
 db_config = {
-    "host": "database-1.cx2mmkoguz49.il-central-1.rds.amazonaws.com",
+    "host": "  ",
     "user": "admin",
     "password": "Cloud1234",
-    "database": "registrationdb"
+    "database": "khushi"
 }
 
 def get_db_connection():
